@@ -30,4 +30,13 @@ body {
 .el-textarea__inner {
   line-height: 3;
 }
+.el-input__inner {
+  background-color: transparent;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1px solid #DCDFE6;
+  color: #fff;
+  letter-spacing: 2px;
+}
 </style>
