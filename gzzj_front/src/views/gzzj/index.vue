@@ -52,7 +52,7 @@
         </el-menu>
       </el-col>
       <el-col :span="21" class="main">
-        <el-breadcrumb separator="/">
+        <el-breadcrumb separator="/" style="width: 50%;float: left">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
           <el-breadcrumb-item>
             <a href="/">活动管理</a>
@@ -60,6 +60,21 @@
           <el-breadcrumb-item>活动列表</el-breadcrumb-item>
           <el-breadcrumb-item>活动详情</el-breadcrumb-item>
         </el-breadcrumb>
+        <div class="userinfo" style="float:right;height: 50px;margin-right:20px">
+          <p style="float: left;margin-right: 20px;color: #fff">nihao, {{ logininfo.user_name }}</p>
+          <el-dropdown trigger="click" style="height: 50px;float: right">
+            <span class="el-dropdown-link">
+              <img src="@/assets/img/Magic-Mouse-Scroll.jpg" class="user-avatar">
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item icon="el-icon-plus">黄金糕</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-circle-plus">狮子头</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-circle-plus-outline">螺蛳粉</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-check">双皮奶</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-circle-check-outline">蚵仔煎</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
         <router-view></router-view>
       </el-col>
     </el-row>
@@ -67,9 +82,17 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   data() {
     return {};
+  },
+  computed: {
+    ...mapGetters([
+      'user_name',
+      'userinfo',
+      'logininfo'
+    ])
   },
   methods: {
     handleOpen(key, keyPath) {
@@ -78,7 +101,8 @@ export default {
     handleClose(key, keyPath) {
       console.log(key, keyPath);
     }
-  }
+  },
+  
 };
 </script>
 
@@ -112,23 +136,41 @@ body {
   margin: 0;
 }
 .el-breadcrumb {
-    font-size: 16px;
-    line-height: 3;
-    height: 100%;
-    vertical-align: middle;
+  font-size: 16px;
+  line-height: 3;
+  height: 100%;
+  vertical-align: middle;
 }
 .el-breadcrumb__item {
-    height: 100%;
-    vertical-align: middle;
+  height: 100%;
+  vertical-align: middle;
 }
 .el-breadcrumb__inner.is_link {
-    height: 100%;
-    vertical-align: middle;
-    color: white !important;
+  height: 100%;
+  vertical-align: middle;
+  color: white !important;
+}
+.el-dropdown-link {
+  cursor: pointer;
+  color: #409eff;
+}
+.el-icon-arrow-down {
+  font-size: 12px;
+}
+.demonstration {
+  display: block;
+  color: #8492a6;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50px;
+  margin-top: 5px;
 }
 // .sidebar {
 //   width: 10%;
 //   min-width: 10rem;
 // }
-
 </style>

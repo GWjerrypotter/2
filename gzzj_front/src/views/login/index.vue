@@ -16,9 +16,6 @@
               label-position="left"
             >
               <el-form-item prop="username">
-                <span class="svg-container">
-                  <svg-icon icon-class="user"/>
-                </span>
                 <el-input
                   v-model="loginForm.username"
                   name="username"
@@ -28,20 +25,15 @@
                 />
               </el-form-item>
               <el-form-item prop="password">
-                <span class="svg-container">
-                  <svg-icon icon-class="password"/>
-                </span>
                 <el-input
-                  :type="pwdType"
+                  type="password"
                   v-model="loginForm.password"
                   name="password"
+                  show-password
                   auto-complete="on"
                   placeholder="请输入密码"
                   @keyup.enter.native="handleLogin"
                 />
-                <span class="show-pwd" @click="showPwd">
-                  <svg-icon icon-class="eye"/>
-                </span>
               </el-form-item>
               <el-form-item>
                 <el-button
@@ -57,7 +49,7 @@
             <el-button type="success" style="width: 300px;margin-top: 30px;" @click.native.prevent="handleLogin">登录</el-button>-->
           </div>
         </div>
-        <video :style="fixStyle" autoplay loop class="fillWidth" v-on:canplay="canplay">
+        <video :style="fixStyle" autoplay loop class="fillWidth">
           <source src="../../assets/video/Sketch.mp4" type="video/mp4">
         </video>
         <!-- <div class="poster hidden" v-if="!vedioCanPlay">
@@ -71,7 +63,6 @@
 </style>
 
 <script>
-import { Login } from '@/api/index'
 export default {
   name: "Login",
   data() {
@@ -83,7 +74,6 @@ export default {
       }
     }
     return {
-      vedioCanPlay: false,
       fixStyle: "",
       user: "",
       password: "",
@@ -96,7 +86,6 @@ export default {
         password: [{ required: true, trigger: 'blur', validator: validatePass }]
       },
       loading: false,
-      pwdType: 'password',
       redirect: undefined
     };
   },
@@ -112,9 +101,6 @@ export default {
     this.startup();
   },
   methods: {
-    canplay() {
-      this.vedioCanPlay = true;
-    },
     startup() {
       window.onresize = () => {
         const windowWidth = document.body.clientWidth;
@@ -144,20 +130,13 @@ export default {
       };
       window.onresize();
     },
-    showPwd() {
-      if (this.pwdType === 'password') {
-        this.pwdType = ''
-      } else {
-        this.pwdType = 'password'
-      }
-    },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
           this.$store.dispatch('Login', this.loginForm).then(() => {
             this.loading = false
-            this.$router.push({ path: '/' })
+            this.$router.push({ path: '/gzzj/' })
           }).catch(() => {
             this.loading = false
           })

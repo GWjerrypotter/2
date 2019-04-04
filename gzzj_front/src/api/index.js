@@ -1,5 +1,23 @@
 import request from '@/utils/request'
 
+export function login(username, password) {
+  return request({
+    url: '/login/',
+    method: 'post',
+    data: {
+      username,
+      password
+    }
+  })
+};
+
+export function getInfo(id) {
+  return request({
+    url: '/users/' + id + '/',
+    method: 'get'
+  })
+};
+
 export function getgzzjlist(params) {
   return request({
     url: "/gzzjlist/",

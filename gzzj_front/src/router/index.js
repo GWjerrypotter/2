@@ -19,7 +19,7 @@ export default new Router({
     {
       path: '/',
       name: 'index',
-      redirect: '/gzzj/'
+      redirect: '/login'
     },
     {
       path: '/gzzj/',
