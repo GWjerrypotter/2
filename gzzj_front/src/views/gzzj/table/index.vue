@@ -1,30 +1,25 @@
 <template>
   <section>
     <el-col :span="22" class="toolbar" style="padding-bottom: 0px;">
-      <!-- <el-form :inline="true" :model="filters">
-        <el-form-item>
-          <el-input v-model="filters.name" placeholder="姓名"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" v-on:click="getgzzj()">查询</el-button>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="handleAdd">新增</el-button>
-        </el-form-item>
-      </el-form> -->
       <el-row :gutter="20">
         <el-col :span="4" style="min-width: 200px">
-          <el-input suffix-icon="el-icon-edit" placeholder="录入人查询" v-model="listQuery.user" @keyup.enter.native="handleFilter"></el-input>
+          <el-input
+            suffix-icon="el-icon-edit"
+            placeholder="录入人查询"
+            v-model="listQuery.user"
+            @keyup.enter.native="handleFilter"
+          ></el-input>
         </el-col>
         <el-col :span="4" style="min-width: 200px">
-          <el-input suffix-icon="el-icon-edit" placeholder="内容查询" v-model="listQuery.gzzj" @keyup.enter.native="handleFilter"></el-input>
+          <el-input
+            suffix-icon="el-icon-edit"
+            placeholder="内容查询"
+            v-model="listQuery.gzzj"
+            @keyup.enter.native="handleFilter"
+          ></el-input>
         </el-col>
         <el-col :span="2" style="min-width: 120px">
-          <el-popover
-            placement="bottom"
-            width="430"
-            style="margin-right:10px;"
-            trigger="click">
+          <el-popover placement="bottom" width="430" style="margin-right:10px;" trigger="click">
             <div class="demo-input-suffix">
               <el-date-picker
                 v-model="datepickervalue"
@@ -63,7 +58,12 @@
       <el-table-column label="操作" width="200">
         <template slot-scope="scope">
           <el-button type="info" size="small" @click="handleCheck(scope.row)">查看详情</el-button>
-          <el-button type="danger" size="small" @click="handleDel(scope.row)">删除</el-button>
+          <el-button
+            type="danger"
+            size="small"
+            :disabled="scope.row.user.user_name !== logininfo.user_name"
+            @click="handleDel(scope.row)"
+          >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -81,20 +81,22 @@
         layout="total, sizes, prev, pager, next, jumper"
         style="float:left;"
       ></el-pagination>
+      <el-button type="primary" @click="export2Excel">导出数据</el-button>
     </el-col>
 
     <!--新增界面-->
     <el-dialog title="新增" :visible.sync="addFormVisible" :close-on-click-modal="false">
       <el-form :model="addForm" label-width="80px" ref="addForm" :rules="rules">
         <el-form-item label="录入人" prop="user" style="text-align: left">
-          <el-select v-model="addForm.user" placeholder="请选择">
+          <span>{{ logininfo.user_name }}</span>
+          <!-- <el-select v-model="addForm.user" placeholder="请选择">
             <el-option
               v-for="item in users"
               :key="item.id"
               :label="item.user_name"
               :value="item.id"
             ></el-option>
-          </el-select>
+          </el-select>-->
         </el-form-item>
         <el-form-item label="工作总结" prop="gzzj" style="line-height: 3">
           <el-input
@@ -153,7 +155,9 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import { getgzzjlist, deletegzzj, getuserlist, addgzzj } from "@/api/index";
+
 export default {
   data() {
     return {
@@ -161,7 +165,7 @@ export default {
         user: undefined,
         gzzj: undefined,
         time_after: undefined,
-        time_before: undefined,
+        time_before: undefined
       },
       filters: {
         user: "",
@@ -169,13 +173,12 @@ export default {
       },
       gzzjs: [],
       users: [],
+      disabled: true,
+      department: "",
       rules: {
-        user: [
-          { required: true, message: '请选择录入人', trigger: 'change' }
-        ],
         gzzj: [
-          { required: true, message: '请输入工作总结内容', trigger: 'blur' },
-          { min: 1, max: 256, message: '长度在 1 到 256 之间（含）'}
+          { required: true, message: "请输入工作总结内容", trigger: "blur" },
+          { min: 1, max: 256, message: "长度在 1 到 256 之间（含）" }
         ]
       },
       remnant: 0, //输入数
@@ -186,7 +189,7 @@ export default {
       pagesize: 10,
       sels: [],
       listLoading: false,
-      datepickervalue: '',
+      datepickervalue: "",
       addLoading: false,
       addFormVisible: false, //新增界面是否显示
       checkVisible: false, //查看详情界面是否显示
@@ -199,12 +202,16 @@ export default {
   },
   mounted() {
     this.getgzzj();
+    // console.log(this.$store.getters.dept)
+  },
+  computed: {
+    ...mapGetters(["logininfo"])
   },
   methods: {
     handleSizeChange(val) {
       this.pagesize = val;
       console.log("当前pagesize是" + this.pagesize);
-      this.getgzzj({ page_size: this.pagesize, ...this.listQuery });
+      this.getgzzj({ p: this.currentPage, page_size: this.pagesize, ...this.listQuery });
     },
     handleCurrentChange(page) {
       this.currentPage = page;
@@ -215,14 +222,17 @@ export default {
     },
     getgzzj(params) {
       this.listLoading = true;
+      let dept = this.$store.getters.dept;
       // params = { page_size: this.pagesize, p: this.currentPage };
-      typeof (params) === 'object' ? params.page_size = this.pagesize : params = { page_size: this.pagesize }
-      getgzzjlist(params)
+      // typeof params === "object"
+      //   ? (params.page_size = this.pagesize)
+      //   : (params = { page_size: this.pagesize });
+      getgzzjlist({ p: this.currentPage, page_size: this.pagesize, dept, ...this.listQuery })
         .then(response => {
           console.log(response);
-          const d = response.data.results;
+          const d = response.results;
           this.gzzjs = d;
-          this.total = response.data.count;
+          this.total = response.count;
           this.listLoading = false;
         })
         .catch(err => {
@@ -230,6 +240,7 @@ export default {
         });
     },
     handleFilter() {
+      console.log(this.listQuery)
       this.currentPage = 1
       this.getgzzj(this.listQuery)
     },
@@ -239,13 +250,13 @@ export default {
       this.handleFilter()
     },
     clearAll() {
-      this.currentPage = 1
-      this.pagesize = undefined
-      this.listQuery.time_after = undefined
-      this.listQuery.time_before = undefined
-      this.listQuery.user = undefined
-      this.listQuery.gzzj = undefined
-      this.getgzzj(this.listQuery)
+      this.currentPage = 1;
+      this.pagesize = undefined;
+      this.listQuery.time_after = undefined;
+      this.listQuery.time_before = undefined;
+      this.listQuery.user = undefined;
+      this.listQuery.gzzj = undefined;
+      this.getgzzj(this.listQuery);
     },
     handleDel(row) {
       this.$confirm("确认删除该记录吗?", "提示", {
@@ -270,11 +281,12 @@ export default {
     handleAdd() {
       this.addFormVisible = true;
       this.addForm = {
-        user: "",
+        user: this.logininfo.user_id,
         gzzj: ""
       };
       getuserlist().then(response => {
-        const usr = response.data.results;
+        console.log(response);
+        const usr = response.results;
         this.users = usr;
       });
     },
@@ -285,6 +297,7 @@ export default {
           this.$confirm("确认提交吗？", "提示", {}).then(() => {
             this.addLoading = true;
             let para = this.addForm;
+            console.log(this.addForm);
             addgzzj(para).then(res => {
               this.addLoading = false;
               this.$message({
@@ -301,8 +314,7 @@ export default {
       });
     },
     handleCancel() {
-      this.addFormVisible = false
-
+      this.addFormVisible = false;
     },
     // 显示详情页面
     handleCheck(row) {
@@ -315,7 +327,56 @@ export default {
     descInput() {
       var txtVal = this.addForm.gzzj.length;
       this.remnant = txtVal;
-    }
+    },
+
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v,k => filterVal.map(j => {
+        if (j === 'user') {
+          return v['gzzj'].user_name
+        } else {
+          return v[j]
+        }
+      }))
+    },
+    export2Excel() {
+      this.$confirm('是否要导出数据', {
+        confirmButtonText: '确定',
+        cancleButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.currentPage && (this.currentPage = undefined)
+        this.pagesize && (this.pagesize = undefined)
+
+        getgzzjlist(this.listQuery).then(res => {
+          import('@/vendor/Export2Excel').then(excel => {
+            const tHeader = ['序号', '录入人', '工作总结']
+            const filterVal = ['id', 'user', 'gzzj']
+            const list = res
+            const data = this.formatJson(filterVal, list)
+            excel.export_json_to_excel({
+              header: tHeader,
+              data,
+              filename: 'querygzzj',
+              autowidth: true,
+              bookType: 'xlsx'
+            })
+            this.$message({
+              message: '导出成功，即将下载...',
+              type: 'success'
+            })
+          }).catch(() => {
+          this.$message({
+            message: '导出失败，请联系管理员',
+            type: 'error'
+          })
+        })
+        }).catch(() => {
+        console.log(err)
+        })
+      }).catch(() => {
+        this.$message('操作取消')
+      })
+    },
   },
   filters: {
     ellipsis(value) {

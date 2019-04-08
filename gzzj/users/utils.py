@@ -9,4 +9,5 @@ def jwt_response_payload_handler(token, Users=None, request=None):
         'user_id': Users.id,
         'username': Users.username,
         'user_name': Users.user_name,
+        'dept': Users.dept.dept,
     }

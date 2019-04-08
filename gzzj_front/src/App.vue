@@ -6,13 +6,28 @@
 
 <script>
 export default {
-  name: 'App'
-}
+  name: "App",
+  // 解决刷新页面store数据丢失的问题
+  created() {
+    if (sessionStorage.getItem("store")) {
+      this.$store.replaceState(
+        Object.assign(
+          {},
+          this.$store.state,
+          JSON.parse(sessionStorage.getItem("store"))
+        )
+      )
+    }
+    window.addEventListener("beforeunload", () => {
+      sessionStorage.setItem("store", JSON.stringify(this.$store.state))
+    })
+  }
+};
 </script>
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /* text-align: center; */
@@ -23,9 +38,9 @@ body {
   margin: 0;
 }
 .cell {
-  white-space: nowrap !important; 
-  overflow: hidden; 
-  text-overflow: ellipsis; 
+  white-space: nowrap !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .el-textarea__inner {
   line-height: 3;
@@ -35,8 +50,7 @@ body {
   border-top: none;
   border-left: none;
   border-right: none;
-  border-bottom: 1px solid #DCDFE6;
-  color: #fff;
+  border-bottom: 1px solid #dcdfe6;
   letter-spacing: 2px;
 }
 </style>

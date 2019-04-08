@@ -71,7 +71,7 @@
               <el-dropdown-item icon="el-icon-circle-plus">狮子头</el-dropdown-item>
               <el-dropdown-item icon="el-icon-circle-plus-outline">螺蛳粉</el-dropdown-item>
               <el-dropdown-item icon="el-icon-check">双皮奶</el-dropdown-item>
-              <el-dropdown-item icon="el-icon-circle-check-outline">蚵仔煎</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-circle-check-outline"><span  @click="handleLogout">退出登录</span></el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </div>
@@ -100,8 +100,13 @@ export default {
     },
     handleClose(key, keyPath) {
       console.log(key, keyPath);
+    },
+    handleLogout() {
+      this.$store.dispatch('Logout').then(() => {
+        this.$router.push({name: 'login'})
+      })
     }
-  },
+  }
   
 };
 </script>
