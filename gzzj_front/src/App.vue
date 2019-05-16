@@ -45,12 +45,17 @@ body {
 .el-textarea__inner {
   line-height: 3;
 }
-.el-input__inner {
+.logininput .el-input__inner {
   background-color: transparent;
   border-top: none;
-  border-left: none;
+  border-left: none ;
   border-right: none;
   border-bottom: 1px solid #dcdfe6;
   letter-spacing: 2px;
+  color: white;
+}
+.demo-table-expand .el-form-item__label {
+  width: 100px;
+  color: #99a9bf;
 }
 </style>

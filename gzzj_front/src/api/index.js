@@ -1,5 +1,6 @@
 import request from '@/utils/request'
 
+
 export function login(username, password) {
   return request({
     url: '/login/',
@@ -41,16 +42,49 @@ export function addgzzj(para) {
   })
 };
 
-export function getuserlist() {
+export function editgzzj(id, data) {
   return request({
-    url: "/users/?page_size=10",
-    method: 'get',
+    url: '/gzzjupdate/' + id + '/',
+    method: 'patch',
+    data
   })
 };
 
-// export function checkgzzj(para) {
-//   return request({
-//     url: '/gzzjlist/' + para,
-//     method: 'get',
-//   })
-// };
+export function getuserlist(params) {
+  return request({
+    url: "/users/",
+    method: 'get',
+    params: {ordering: '-id', ...params }
+  })
+};
+
+export function adduser(para) {
+  return request({
+    url: '/usersadd/',
+    method: 'post',
+    data: para,
+  })
+};
+
+export function updateuser(id, data) {
+  return request({
+    url: '/usersupdate/' + id + '/',
+    method: 'patch',
+    data
+  })
+};
+
+export function userpassword(id, data) {
+  return request({
+    url: '/userpassword/' + id + '/',
+    method: 'patch',
+    data
+  })
+};
+
+export function deleteuser(para) {
+  return request({
+    url: '/users/' + para,
+    method: 'delete',
+  })
+};

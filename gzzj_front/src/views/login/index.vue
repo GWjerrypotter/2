@@ -4,7 +4,7 @@
       <div class="video-container">
         <div :style="fixStyle" class="filter">
           <div class="title">
-            <h1 style="color: #3AB2DA">Work Summary System</h1>
+            <h1 style="color: #3AB2DA">工作总结系统</h1>
           </div>
           <div class="login">
             <el-form
@@ -12,25 +12,24 @@
               :model="loginForm"
               :rules="loginRules"
               class="login-form"
-              auto-complete="on"
               label-position="left"
             >
-              <el-form-item prop="username">
+              <el-form-item prop="username" class="logininput">
                 <el-input
                   v-model="loginForm.username"
                   name="username"
                   type="text"
-                  auto-complete="on"
                   placeholder="请输入用户名"
+                  class="logininput"
                 />
               </el-form-item>
               <el-form-item prop="password">
                 <el-input
                   type="password"
                   v-model="loginForm.password"
+                  class="logininput"
                   name="password"
                   show-password
-                  auto-complete="on"
                   placeholder="请输入密码"
                   @keyup.enter.native="handleLogin"
                 />
@@ -136,7 +135,7 @@ export default {
           this.loading = true
           this.$store.dispatch('Login', this.loginForm).then(() => {
             this.loading = false
-            this.$router.push({ path: '/gzzj/' })
+            this.$router.push({ path: '/gzzjxt/' })
           }).catch(() => {
             this.loading = false
           })
@@ -151,6 +150,7 @@ export default {
 </script>
 
 <style scoped>
+
 .homepage-hero-module,
 .video-container {
   position: relative;

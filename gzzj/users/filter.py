@@ -9,4 +9,4 @@ class UsersFilter(django_filters.rest_framework.FilterSet):
 
     class Meta:
         model = Users
-        fields = ['id', 'user_name', 'username', 'dept']
+        fields = ['id', 'user_name', 'username', 'dept', 'is_manager']

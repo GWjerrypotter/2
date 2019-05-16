@@ -1,4 +1,4 @@
-import { login } from '@/api/index'
+import { login, getInfo } from '@/api/index'
 import { getToken, setToken, removeToken, getUsername, setUsername, removeUsername, setLoginInfo, getLoginInfo, removeLoginInfo } from '@/utils/auth'
 
 const BASE = '@'
@@ -11,6 +11,7 @@ const user = {
         user_name: '',
         dept: '',
         isLogin: undefined,
+        roles: undefined,
     },
 
     mutations: {
@@ -32,6 +33,9 @@ const user = {
         SET_LOGININFO: (state, logininfo) => {
             state.logininfo = logininfo
         },
+        SET_ROLES: (state, roles) => {
+            state.roles = roles
+        },
     },
 
     actions: {
@@ -40,7 +44,6 @@ const user = {
             return new Promise((resolve, reject) => {
                 login(username, userInfo.password).then(response => {
                     const data = response
-                    console.log(data)
                     setToken(data.token)
                     setUsername(username)
                     setLoginInfo(data)
@@ -70,6 +73,7 @@ const user = {
                     commit('SET_USERINFO', data)
                     commit('SET_USER_NAME', data.user_name)
                     commit('SET_DEPT', data.dept)
+                    commit('SET_ROLES', data.is_manager)
                     
                     // commit('SET_AVATAR', data.avatar)
                     resolve(response)
@@ -87,10 +91,25 @@ const user = {
                 commit('SET_LOGININFO', '')
                 commit('SET_DEPT', '')
                 commit('SET_USER_NAME', '')
+                commit('SET_ROLES', undefined)
                 removeToken()
                 removeUsername()
                 removeLoginInfo()
                 resolve()
+            })
+        },
+        // 前端 登出
+        FedLogOut({ commit }) {
+            return new Promise(resolve => {
+            commit('SET_TOKEN', '')
+            commit('SET_USERNAME', '')
+            commit('SET_USERINFO', '')
+            commit('SET_LOGININFO', '')
+            commit('SET_ROLES', undefined)
+            removeToken()
+            removeUsername()
+            removeLoginInfo()
+            resolve()
             })
         }
     }
