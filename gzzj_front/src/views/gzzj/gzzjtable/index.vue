@@ -417,7 +417,8 @@ export default {
       this.editForm = {
         id: row.id,
         user: this.logininfo.user_id,
-        gzzj: ""
+        gzzj: row.gzzj,
+        time: row.time
       };
       getuserlist().then(response => {
         const usr = response.results;

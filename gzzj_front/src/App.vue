@@ -21,8 +21,20 @@ export default {
     window.addEventListener("beforeunload", () => {
       sessionStorage.setItem("store", JSON.stringify(this.$store.state))
     })
+  },
+  mounted() {
+    // 关闭浏览器窗口的时候清空浏览器缓存在localStorage的数据
+    window.onbeforeunload = function () {
+      this.$cookies.remove('li')
+      this.$cookies.remove('token')
+      this.$cookies.remove('username')
+      var lstorage = window.localStorage
+      var sstorage = window.sessionStorage
+      lstorage.clear()
+      sstorage.clear()
+    } 
   }
-};
+}
 </script>
 
 <style>
@@ -48,7 +60,7 @@ body {
 .logininput .el-input__inner {
   background-color: transparent;
   border-top: none;
-  border-left: none ;
+  border-left: none;
   border-right: none;
   border-bottom: 1px solid #dcdfe6;
   letter-spacing: 2px;

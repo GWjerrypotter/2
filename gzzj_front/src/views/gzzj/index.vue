@@ -148,8 +148,7 @@ export default {
       this.$store.dispatch("Logout").then(() => {});
       this.$store.dispatch("FedLogOut").then(location.reload(),sessionStorage.clear(),() => {
         this.$router.push({ path: "/" })
-      });
-      
+      })
     }
   }
 };

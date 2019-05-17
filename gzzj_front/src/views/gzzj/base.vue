@@ -16,7 +16,7 @@
       <el-timeline-item timestamp="Step 3" icon="el-icon-bottom" color="blue" size="large" placement="top">
         <el-card>
           <h4>Tips</h4>
-          <p>暂时不支持修改工作总结，如发现添加有误请自行删除并重新添加</p>
+          <p>已支持修改工作总结，如发现添加有误可自行删除并重新添加或修改</p>
         </el-card>
       </el-timeline-item>
         <el-timeline-item v-if="logininfo.is_manager" timestamp="Step 4" icon="el-icon-bottom" color="blue" size="large" placement="top">
